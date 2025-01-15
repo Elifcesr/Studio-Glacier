@@ -3,50 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Enemy : MonoBehaviour
 {
-    Rigidbody2D rb;
+    public int health = 100;
 
-    public float xSpeed;
-    public float ySpeed;
+    public GameObject deathEffect;
 
-    public bool canShoot;
-    public float fireRate;
-    public float health;
-
-    private void Awake()
+    public void TakeDamage (int damage)
     {
-        rb = GetComponent<Rigidbody2D>();
-    }
-
-    void Start()
-    {
-    }
-
-    void Update()
-    {
-        rb.velocity = new Vector2(ySpeed, xSpeed * -1);
-    }
-
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.tag == "Player")
-        {
-            col.gameObject.GetComponent<penguin>().Damage();
-            Die();
-        }
-    }
-
-    void Die()
-    {
-        Destroy(gameObject);
-    }
-
-    public void TakeDamage(float damageAmount)
-    {
-        health -= damageAmount;
+        health -= damage;
 
         if (health <= 0)
         {
             Die();
         }
+    }
+
+    void Die ()
+    {
+        Instantiate(deathEffect, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

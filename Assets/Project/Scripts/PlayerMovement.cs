@@ -4,12 +4,34 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    // Singleton instance
+    public static PlayerMovement instance;
+
     public float moveSpeed = 5f;
     public float minY = -4f;
     public float maxY = 4f;
+
+    public bool stopMovement = false;
+
+    void Awake()
+    {
+        // Singleton control
+        if (instance == null)
+        {
+            instance = this; 
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject); 
+        }
+    }
+
     void Update()
     {
-        Move();
+        if (!stopMovement)
+        {
+            Move();
+        }
     }
 
     void Move()
@@ -22,5 +44,16 @@ public class PlayerMovement : MonoBehaviour
         newPosition.y = Mathf.Clamp(newPosition.y, minY, maxY);
 
         transform.position = newPosition;
+    }
+    public void SetMovement(bool canMove)
+    {
+        stopMovement = !canMove;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //if(collision.CompareTag("FinishLine"))
+        //{
+        //    HealthManager.instance.HurtPlayer();
+        //}
     }
 }
